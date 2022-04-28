@@ -36,7 +36,7 @@ class DislashContext(commands.Cog):
         > `await ctx.sendi("Content", components=[components])`
         """
 
-        if not name and self.settings["send_monkeypatch"]:
+        if self.settings["send_monkeypatch"] and not name:
             delattr(commands.Context, self.settings["send_monkeypatch"])
             self.settings["send_monkeypatch"] = None
             return await ctx.send("The monkeypatched `ctx.send` has been removed.")
