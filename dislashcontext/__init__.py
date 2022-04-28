@@ -47,20 +47,22 @@ class DislashContext(commands.Cog):
         setattr(commands.Context, self.settings["send_monkeypatch"], send_with_components)
         await ctx.tick()
         await ctx.send(
-            "The monkeypatched send has been set to `ctx.{send}`.\n"
-            "If you want to test it, run:\n"
-            "{prefix}eval ```py\n"
-            "from dislash.interactions import ActionRow, Button, ButtonStyle\n\n"
-            "link_button = ActionRow(\n"
-            "  Button(\n"
-            "    style=ButtonStyle.link,\n"
-            "    label=\"Google\",\n"
-            "    url=\"https://google.com\"\n"
-            "  )\n"
-            ")\n\n"
-            "await ctx.{send}(\"Test\", components=[link_button])\n"
-            "```"
-        ).format(send=self.settings["send_monkeypatch"], prefix=ctx.prefix)
+            (
+                "The monkeypatched send has been set to `ctx.{send}`.\n"
+                "If you want to test it, run:\n"
+                "{prefix}eval ```py\n"
+                "from dislash.interactions import ActionRow, Button, ButtonStyle\n\n"
+                "link_button = ActionRow(\n"
+                "  Button(\n"
+                "    style=ButtonStyle.link,\n"
+                "    label=\"Google\",\n"
+                "    url=\"https://google.com\"\n"
+                "  )\n"
+                ")\n\n"
+                "await ctx.{send}(\"Test\", components=[link_button])\n"
+                "```"
+            ).format(send=self.settings["send_monkeypatch"], prefix=ctx.prefix)
+        )
 
 
 async def setup(bot):
