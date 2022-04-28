@@ -18,11 +18,11 @@ class DislashContext(commands.Cog):
 
     async def initialize(self):
         self.settings = await self.config.all()
-        if hasattr(commands.Context, self.settings["send_monkeypatch"]):
+        if self.settings["send_monkeypatch"] and not hasattr(commands.Context, self.settings["send_monkeypatch"]):
             setattr(commands.Context, self.settings["send_monkeypatch"], send_with_components)
 
     def cog_unload(self):
-        if hasattr(commands.Context, self.settings["send_monkeypatch"]):
+        if self.settings["send_monkeypatch"] and hasattr(commands.Context, self.settings["send_monkeypatch"]):
             delattr(commands.Context, self.settings["send_monkeypatch"])
 
     @commands.is_owner()
