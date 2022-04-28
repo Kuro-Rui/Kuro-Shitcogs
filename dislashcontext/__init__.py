@@ -18,12 +18,14 @@ class DislashContext(commands.Cog):
 
     async def initialize(self):
         self.settings = await self.config.all()
-        if self.settings["send_monkeypatch"] and not hasattr(commands.Context, self.settings["send_monkeypatch"]):
-            setattr(commands.Context, self.settings["send_monkeypatch"], send_with_components)
+        if self.settings["send_monkeypatch"]:
+            if not hasattr(commands.Context, self.settings["send_monkeypatch"]):
+                setattr(commands.Context, self.settings["send_monkeypatch"], send_with_components)
 
     def cog_unload(self):
-        if self.settings["send_monkeypatch"] and hasattr(commands.Context, self.settings["send_monkeypatch"]):
-            delattr(commands.Context, self.settings["send_monkeypatch"])
+        if self.settings["send_monkeypatch"]:
+            if hasattr(commands.Context, self.settings["send_monkeypatch"]):
+                delattr(commands.Context, self.settings["send_monkeypatch"])
 
     @commands.is_owner()
     @commands.group()
@@ -36,7 +38,7 @@ class DislashContext(commands.Cog):
         > `await ctx.sendi("Content", components=[components])`
         """
 
-        if self.settings["send_monkeypatch"] and not name:
+        if not name and self.settings["send_monkeypatch"]:
             delattr(commands.Context, self.settings["send_monkeypatch"])
             self.settings["send_monkeypatch"] = None
             return await ctx.send("The monkeypatched `ctx.send` has been removed.")
