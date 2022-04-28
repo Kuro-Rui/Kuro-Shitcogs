@@ -41,6 +41,8 @@ class DislashContext(commands.Cog):
                 delattr(commands.Context, self.settings["send_monkeypatch"])
                 self.settings["send_monkeypatch"] = None
                 return await ctx.send("The monkeypatched `ctx.send` has been removed.")
+            else:
+                return await ctx.send_help()
         self.settings["send_monkeypatch"] = name
         setattr(commands.Context, self.settings["send_monkeypatch"], send_with_components)
         await ctx.tick()
