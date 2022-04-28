@@ -1,7 +1,7 @@
 {
     "author": ["Kuro"],
     "description": "Just some shitty cogs made by Kuro that you better not use :p",
-    "install_msg": "Thanks for installing my repo!\nI suggest you don't install any of the cogs if you don't know the uses, as it may/may not break your bot.\nI'm not responsible for any breaks on your bot.\nUse `[p]cog list kuro-cogs` to see available cogs.",
-    "name": "kuro-cogs",
+    "install_msg": "Thanks for installing my repo!\nI suggest you don't install any of the cogs if you don't know the uses, as it may/may not break your bot.\nI'm not responsible for any breaks on your bot.\nUse `[p]cog list kuro-shit` to see available cogs.",
+    "name": "kuro-shit",
     "short": "Just some shitty cogs made by Kuro that you better not use :p"
 }
