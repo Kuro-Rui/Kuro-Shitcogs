@@ -12,14 +12,16 @@ class DislashContext(commands.Cog):
         self.config = Config.get_conf(self, 9937656857, True)
         default_global = {"send_monkeypatch": None}
         self.config.register_global(**default_global)
+        self.settings = {}
 
     async def initialize(self):
+        self.settings = await self.config.all()
         send_monkeypatch = await self.config.send_monkeypatch()
         if send_monkeypatch and not hasattr(commands.Context, send_monkeypatch):
             setattr(commands.Context, send_monkeypatch, send_with_components)
 
     def cog_unload(self):
-        send_monkeypatch = await self.config.send_monkeypatch()
+        send_monkeypatch = self.settings["send_monkeypatch"]
         if send_monkeypatch and hasattr(commands.Context, send_monkeypatch):
             delattr(commands.Context, send_monkeypatch)
 
