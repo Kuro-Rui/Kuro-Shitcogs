@@ -18,7 +18,7 @@ class DislashContext(commands.Cog):
 
     async def initialize(self):
         self.settings = await self.config.all()
-        if self.settings["send_monkeypatch"] and not hasattr(commands.Context, self.settings["send_monkeypatch"]):
+        if self.settings["send_monkeypatch"]:
             setattr(commands.Context, self.settings["send_monkeypatch"], send_with_components)
 
     def cog_unload(self):
@@ -41,26 +41,27 @@ class DislashContext(commands.Cog):
         > `await ctx.sendi("Content", components=[components])`
         """
 
-        self.settings["send_monkeypatch"] = name
-        setattr(commands.Context, name, send_with_components)
-        await ctx.tick()
-        await ctx.send(
-            (
-                "The monkeypatched send has been set to `ctx.{send}`.\n"
-                "If you want to test it, run:\n"
-                "{prefix}eval ```py\n"
-                "from dislash.interactions import ActionRow, Button, ButtonStyle\n\n"
-                "link_button = ActionRow(\n"
-                "  Button(\n"
-                "    style=ButtonStyle.link,\n"
-                "    label=\"Google\",\n"
-                "    url=\"https://google.com\"\n"
-                "  )\n"
-                ")\n\n"
-                "await ctx.{send}(\"Test\", components=[link_button])\n"
-                "```"
-            ).format(send=self.settings["send_monkeypatch"], prefix=ctx.prefix)
-        )
+        if name:
+            self.settings["send_monkeypatch"] = name
+            setattr(commands.Context, name, send_with_components)
+            await ctx.tick()
+            await ctx.send(
+                (
+                    "The monkeypatched send has been set to `ctx.{send}`.\n"
+                    "If you want to test it, run:\n"
+                    "{prefix}eval ```py\n"
+                    "from dislash.interactions import ActionRow, Button, ButtonStyle\n\n"
+                    "link_button = ActionRow(\n"
+                    "  Button(\n"
+                    "    style=ButtonStyle.link,\n"
+                    "    label=\"Google\",\n"
+                    "    url=\"https://google.com\"\n"
+                    "  )\n"
+                    ")\n\n"
+                    "await ctx.{send}(\"Test\", components=[link_button])\n"
+                    "```"
+                ).format(send=self.settings["send_monkeypatch"], prefix=ctx.prefix)
+            )
 
     @dctx.command(name="clear", aliases=["remove", "rem"])
     async def dctx_clear(self, ctx: commands.Context):
