@@ -76,6 +76,7 @@ class DislashContext(commands.Cog):
         if not send_monkeypatch:
             return await ctx.send("Bruh you didn't even set any before.")
         delattr(commands.Context, send_monkeypatch)
+        await self.config.send_monkeypatch.clear()
         await ctx.tick()
         await ctx.send(f"The `ctx.{send_monkeypatch}` has been removed.")
 
