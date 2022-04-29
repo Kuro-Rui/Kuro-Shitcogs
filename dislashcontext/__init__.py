@@ -1,8 +1,6 @@
-import discord
-from dislash.interactions import ActionRow, Button, ButtonStyle
 from dislash.application_commands._modifications.old import send_with_components
 from redbot.core import Config, commands
-from typing import Optional
+from redbot.core.utils.chat_formatting import box
 
 from .converters import StrictString
 
@@ -12,18 +10,23 @@ class DislashContext(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, 9937656857, True)
-        default_global = {"send_monkeypatch": None}
+        if self.saved_config:
+            default_global = self.saved_config
+        else:
+            default_global = {"send_monkeypatch": None}
         self.config.register_global(**default_global)
         self.settings = {}
 
     async def initialize(self):
         self.settings = await self.config.all()
+        self.config.register_global(**self.settings)
         if self.settings["send_monkeypatch"]:
             setattr(commands.Context, self.settings["send_monkeypatch"], send_with_components)
 
     def cog_unload(self):
         if self.settings["send_monkeypatch"] and hasattr(commands.Context, self.settings["send_monkeypatch"]):
             delattr(commands.Context, self.settings["send_monkeypatch"])
+        self.saved_config = self.settings
 
     @commands.is_owner()
     @commands.group()
@@ -42,14 +45,13 @@ class DislashContext(commands.Cog):
         """
 
         if name:
-            self.settings["send_monkeypatch"] = name
+            if self.settings["send_monkeypatch"]:
+                delattr(commands.Context, self.settings["send_monkeypatch"])
             setattr(commands.Context, name, send_with_components)
+            self.settings["send_monkeypatch"] = name
             await ctx.tick()
-            await ctx.send(
+            code = box(
                 (
-                    "The monkeypatched send has been set to `ctx.{send}`.\n"
-                    "If you want to test it, run:\n"
-                    "{prefix}eval ```py\n"
                     "from dislash.interactions import ActionRow, Button, ButtonStyle\n\n"
                     "link_button = ActionRow(\n"
                     "  Button(\n"
@@ -58,9 +60,14 @@ class DislashContext(commands.Cog):
                     "    url=\"https://google.com\"\n"
                     "  )\n"
                     ")\n\n"
-                    "await ctx.{send}(\"Test\", components=[link_button])\n"
-                    "```"
-                ).format(send=self.settings["send_monkeypatch"], prefix=ctx.prefix)
+                    "await ctx.{send}(\"Test\", components=[link_button])"
+                ), lang="py"
+            )
+            await ctx.send(
+                (
+                    "The monkeypatched send has been set to `ctx.{send}`. "
+                    "To test it, run:\n{prefix}eval {code}"
+                ).format(send=self.settings["send_monkeypatch"], prefix=ctx.prefix, code=code)
             )
 
     @dctx.command(name="clear", aliases=["remove", "rem"])
