@@ -10,5 +10,6 @@ class StrictString(Converter):
         except:
             argument = argument.replace(" ", "_")
             if hasattr(Context, argument):
-                return await ctx.send(f"Please don't break me, I already have `ctx.{argument}`.")
+                await ctx.send(f"Please don't break me, I already have `ctx.{argument}`.")
+                return
             return argument
