@@ -45,8 +45,8 @@ class DislashContext(commands.Cog):
             send_monkeypatch = await self.config.send_monkeypatch()
             if send_monkeypatch:
                 delattr(commands.Context, send_monkeypatch)
-            setattr(commands.Context, name, send_with_components)
             await self.config.send_monkeypatch.set(name)
+            setattr(commands.Context, name, send_with_components)
             await ctx.tick()
             code = box(
                 (
@@ -59,13 +59,13 @@ class DislashContext(commands.Cog):
                     "  )\n"
                     ")\n\n"
                     "await ctx.{send}(\"Test\", components=[link_button])"
-                ), lang="py"
+                ).format(send=name), lang="py"
             )
             await ctx.send(
                 (
                     "The monkeypatched send has been set to `ctx.{send}`. "
                     "To test it, run:\n{prefix}eval {code}"
-                ).format(send=send_monkeypatch, prefix=ctx.prefix, code=code)
+                ).format(send=name, prefix=ctx.prefix, code=code)
             )
 
     @dctx.command(name="clear", aliases=["remove", "rem"])
