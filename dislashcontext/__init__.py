@@ -23,28 +23,26 @@ class DislashContext(commands.Cog):
 
     def cog_unload(self):
         if self.settings["send_monkeypatch"] and hasattr(commands.Context, self.settings["send_monkeypatch"]):
-                delattr(commands.Context, self.settings["send_monkeypatch"])
+            delattr(commands.Context, self.settings["send_monkeypatch"])
 
     @commands.is_owner()
     @commands.group()
-    async def dctx(self, ctx: commands.Context, name: Optional[StrictString]):
+    async def dctx(self, ctx: commands.Context):
+        """DislashContext base command."""
+        pass
+
+    @dctx.command(name="set")
+    async def dctx_set(self, ctx: commands.Context, name: StrictString):
         """
         Set the name for the monkeypatched `ctx.send`.
 
-        Example: `[p]dctx sendi`
+        Example: `[p]dctx set sendi`
         If you want to use dislash components, you can call it with `ctx.sendi`
         > `await ctx.sendi("Content", components=[components])`
         """
 
-        if not name:
-            if self.settings["send_monkeypatch"]:
-                delattr(commands.Context, self.settings["send_monkeypatch"])
-                self.settings["send_monkeypatch"] = None
-                return await ctx.send("The monkeypatched `ctx.send` has been removed.")
-            else:
-                return
         self.settings["send_monkeypatch"] = name
-        setattr(commands.Context, self.settings["send_monkeypatch"], send_with_components)
+        setattr(commands.Context, name, send_with_components)
         await ctx.tick()
         await ctx.send(
             (
@@ -63,6 +61,18 @@ class DislashContext(commands.Cog):
                 "```"
             ).format(send=self.settings["send_monkeypatch"], prefix=ctx.prefix)
         )
+
+    @dctx.command(name="clear", aliases=["remove", "rem"])
+    async def dctx_clear(self, ctx: commands.Context):
+        """Removes the current monkeypatched `ctx.send`"""
+
+        if not self.settings["send_monkeypatch"]:
+            return await ctx.send("Bruh you didn't even set any before.")
+        monkeypatched_send = self.settings["send_monkeypatch"]
+        delattr(commands.Context, monkeypatched_send)
+        await ctx.tick()
+        await ctx.send(f"The `ctx.{monkeypatched_send}` has been removed.")
+        self.settings["send_monkeypatch"] = None
 
 
 async def setup(bot):
