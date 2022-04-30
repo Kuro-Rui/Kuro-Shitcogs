@@ -32,7 +32,7 @@ class DislashContext(commands.Cog):
         pass
 
     @dctx.command(name="set")
-    async def dctx_set(self, ctx: commands.Context, name: StrictString):
+    async def dctx_set(self, ctx: commands.Context, *, name: StrictString):
         """
         Set the name for the monkeypatched `ctx.send`.
 
