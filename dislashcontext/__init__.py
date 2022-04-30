@@ -46,6 +46,7 @@ class DislashContext(commands.Cog):
             if send_monkeypatch:
                 delattr(commands.Context, send_monkeypatch)
             await self.config.send_monkeypatch.set(name)
+            self.settings["send_monkeypatch"] = name
             setattr(commands.Context, name, send_with_components)
             await ctx.tick()
             code = box(
@@ -77,6 +78,7 @@ class DislashContext(commands.Cog):
             return await ctx.send("Bruh you didn't even set any before.")
         delattr(commands.Context, send_monkeypatch)
         await self.config.send_monkeypatch.clear()
+        self.settings["send_monkeypatch"] = None
         await ctx.tick()
         await ctx.send(f"The `ctx.{send_monkeypatch}` has been removed.")
 
