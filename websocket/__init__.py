@@ -1,3 +1,4 @@
+import asyncio
 from discord.gateway import DiscordWebSocket
 from redbot.core import Config, commands
 
@@ -11,6 +12,11 @@ class WebSocket(commands.Cog):
         self.bot = bot
         self.config = Config.get_conf(self, 91398293891669, True)
         self.config.register_global(websocket="Web")
+
+    def cog_unload(self):
+        DiscordWebSocket.identify = Web.identify
+        for shard_id, shard in self.bot.shards.items():
+            asyncio.create_task(self.bot.shards[shard_id].reconnect())
 
     @commands.is_owner()
     @commands.command()
@@ -51,9 +57,3 @@ async def setup(bot):
             DiscordWebSocket.identify = Client.identify
         for shard_id, shard in bot.shards.items():
             await bot.shards[shard_id].reconnect()
-
-
-async def teardown(bot):
-    DiscordWebSocket.identify = Web.identify
-    for shard_id, shard in bot.shards.items():
-        await bot.shards[shard_id].reconnect()
