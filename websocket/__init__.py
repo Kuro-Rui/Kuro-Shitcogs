@@ -51,3 +51,9 @@ async def setup(bot):
             DiscordWebSocket.identify = Client.identify
         for shard_id, shard in bot.shards.items():
             await bot.shards[shard_id].reconnect()
+
+
+async def teardown(bot):
+    DiscordWebSocket.identify = Web.identify
+    for shard_id, shard in bot.shards.items():
+        await bot.shards[shard_id].reconnect()
