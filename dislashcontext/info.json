@@ -1,9 +1,10 @@
 {
   "author": ["Kuro"],
-  "description": "Adds an attribute to `redbot.core.commands.Context` for sending message with components!",
+  "description": "Adds an attribute to redbot.core.commands.Context for sending message with components!",
+  "end_user_data_statement": "This cog does not store any end user data.",
   "install_msg": "Thanks for installing `DislashContext`!\nThis cog adds an attribute to `redbot.core.commands.Context` for sending message with components.\nThis can prevent dislash's monkeypatched `ctx.send` from conflicting with some cogs. (For example, `SlashTags`.)",
   "name": "DislashContext",
   "requirements": ["dislash.py"],
-  "short": "Adds an attribute to `redbot.core.commands.Context` for sending message with components!",
+  "short": "Adds an attribute to redbot.core.commands.Context for sending message with components!",
   "type": "COG"
 }
