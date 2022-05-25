@@ -26,6 +26,7 @@ class WebSocket(commands.Cog):
 
         You can choose from `Android`, `iOS`, `Client`, or `Web`.
         """
+        await ctx.send("Ok, shards will restart for a short time.")
         if websocket == "android":
             await self.config.websocket.set("Android")
             DiscordWebSocket.identify = Android.identify
