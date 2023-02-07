@@ -3,7 +3,9 @@
     "description": "This cog monkeypatches the identify payload of DiscordWebSocket.",
     "end_user_data_statement": "This cog does not store any end user data.",
     "install_msg": "Thanks for installing!",
-    "short": "Monkeypatched (no irdumb) bot websocket.",
+    "min_bot_version": "3.4.0",
+    "max_bot_version": "3.4.18",
+    "short": "Monkeypatched bot websocket.",
     "tags": ["monkeypatch", "status", "websocket"],
     "type": "COG"
 }
