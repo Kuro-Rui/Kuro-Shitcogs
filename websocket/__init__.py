@@ -26,7 +26,6 @@ class WebSocket(commands.Cog):
 
         You can choose from `Android`, `iOS`, `Client`, or `Web`.
         """
-        await ctx.send("Ok, shards will restart for a short time.")
         if websocket == "android":
             await self.config.websocket.set("Android")
             DiscordWebSocket.identify = Android.identify
@@ -39,9 +38,9 @@ class WebSocket(commands.Cog):
         elif websocket == "web":
             await self.config.websocket.set("Web")
             DiscordWebSocket.identify = Web.identify
-        for shard in self.bot.shards.items():
-            shard_id = shard[0]
-            await self.bot.shards[shard_id].reconnect()
+        await ctx.send("Ok, shards will restart for a short time.")
+        for shard in self.bot.shards.values():
+            await self.bot.shards[shard].reconnect()
         await ctx.tick()
 
 
@@ -49,12 +48,13 @@ async def setup(bot):
     bot.add_cog(WebSocket(bot))
 
     websocket = await bot.get_cog("WebSocket").config.websocket()
-    if websocket != "Web":
-        if websocket == "Android":
-            DiscordWebSocket.identify = Android.identify
-        elif websocket == "iOS":
-            DiscordWebSocket.identify = iOS.identify
-        elif websocket == "Client":
-            DiscordWebSocket.identify = Client.identify
-        for shard_id, shard in bot.shards.items():
-            await bot.shards[shard_id].reconnect()
+    if websocket == "Web":
+        return
+    if websocket == "Android":
+        DiscordWebSocket.identify = Android.identify
+    elif websocket == "iOS":
+        DiscordWebSocket.identify = iOS.identify
+    elif websocket == "Client":
+        DiscordWebSocket.identify = Client.identify
+    for shard_id, shard in bot.shards.items():
+        await bot.shards[shard_id].reconnect()
