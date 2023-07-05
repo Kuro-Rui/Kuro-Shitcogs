@@ -1,3 +1,4 @@
+import copy
 from discord.gateway import DiscordWebSocket
 from redbot.core import Config, commands
 
@@ -12,7 +13,7 @@ class WebSocket(commands.Cog):
         self.config = Config.get_conf(self, 91398293891669, True)
         self.config.register_global(websocket="Web")
 
-        self.old_identify = DiscordWebSocket.identify
+        self.old_identify = copy.deepcopy(DiscordWebSocket.identify)
 
     async def cog_load(self):
         websocket = await self.config.websocket()
