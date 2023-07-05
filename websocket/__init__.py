@@ -2,6 +2,7 @@ from discord.gateway import DiscordWebSocket
 from redbot.core import Config, commands
 
 from .converters import WSConverter
+from .websockets import *
 
 
 class WebSocket(commands.Cog):
