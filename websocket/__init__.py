@@ -25,12 +25,12 @@ class WebSocket(commands.Cog):
             DiscordWebSocket.identify = iOS.identify
         elif websocket == "Client":
             DiscordWebSocket.identify = Client.identify
-        for shard_id, shard in self.bot.shards.items():
+        for shard_id in self.bot.shards.keys():
             await self.bot.shards[shard_id].reconnect()
 
     async def cog_unload(self):
         DiscordWebSocket.identify = self.old_identify
-        for shard_id, shard in self.bot.shards.items():
+        for shard_id in self.bot.shards.keys():
             await self.bot.shards[shard_id].reconnect()
 
     @commands.is_owner()
@@ -53,8 +53,8 @@ class WebSocket(commands.Cog):
         elif websocket == "web":
             DiscordWebSocket.identify = self.old_identify
         await ctx.send("Ok, shards will restart for a short time.")
-        for shard in self.bot.shards.values():
-            await self.bot.shards[shard].reconnect()
+        for shard_id in self.bot.shards.keys():
+            await self.bot.shards[shard_id].reconnect()
         await ctx.tick()
 
 
