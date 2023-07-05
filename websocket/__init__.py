@@ -25,7 +25,7 @@ class WebSocket(commands.Cog):
         elif websocket == "Client":
             DiscordWebSocket.identify = Client.identify
         for shard_id, shard in self.bot.shards.items():
-            await bot.shards[shard_id].reconnect()
+            await self.bot.shards[shard_id].reconnect()
 
     async def cog_unload(self):
         DiscordWebSocket.identify = self.old_identify
